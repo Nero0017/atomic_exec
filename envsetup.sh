@@ -27,6 +27,7 @@ function build_atomic_cmodel(){
     pushd build
     export LD_LIBRARY_PATH=/workspace/atomic_exec/build:$LD_LIBRARY_PATH
     export LIBSOPHON_TOP=/workspace/libsophon
+    export TPUKERNEL_FIRMWARE_PATH=${ATOMIC_EXEC_TOP}/build/firmware_core/libbm1684x_kernel_module.so
     cmake .. -DCMAKE_BUILD_TYPE=Debug -DUSING_CMODEL=ON -DPCIE_MODE=OFF -DSOC_MODE=OFF
     make -j
     popd
@@ -44,7 +45,7 @@ function build_atomic_pcie(){
     export LD_LIBRARY_PATH=/usr/local/libsophon-current/lib
     cmake .. -DCMAKE_BUILD_TYPE=Debug -DUSING_CMODEL=OFF -DPCIE_MODE=ON -DSOC_MODE=OFF
     
-    make kernel_module
+    # make kernel_module
     make -j
     popd
     popd
@@ -66,7 +67,7 @@ function build_firmware_pcie(){
     export
     
     pushd $ATOMIC_EXEC_TOP/firmware_core/build
-    cmake .. -DUSING_CMODEL=OFF -DPCIE_MODE
+    cmake .. -DUSING_CMODEL=OFF -DPCIE_MODE=ON
     make -j
     popd
 }

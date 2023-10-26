@@ -46,6 +46,7 @@ if(USING_CMODEL)
   )
 endif()
 
+add_subdirectory(firmware_core)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach(dir ${dirs})

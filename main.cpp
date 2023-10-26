@@ -2,6 +2,12 @@
 #include "bmlib_runtime.h"
 #include "support.h"
 
+typedef struct
+{
+    int length;
+    char data[8];
+} sg_api_atomic_t;
+
 void device_example()
 {
 
@@ -31,9 +37,35 @@ void device_example()
     bm_dev_free(bm_handle);
 }
 
+void tpu_kernel_launch_example()
+{
+
+    bm_handle_t bm_handle;
+    auto ret = bm_dev_request(&bm_handle, 0);
+    tpu_kernel_module_t tpu_module;
+    tpu_kernel_function_t func_id;
+
+    tpu_module = tpu_kernel_load_module_file(bm_handle, "/workspace/atomic_exec/build/firmware_core/libbm1684x_kernel_module.so");
+
+    // const unsigned int *p = kernel_module_data;
+    // size_t length = sizeof(kernel_module_data);
+    // tpu_module = tpu_kernel_load_module(bm_handle, (const char *)p, length);
+    sg_api_atomic_t params = {0};
+    params.length = 5;
+
+    func_id = tpu_kernel_get_function(bm_handle, tpu_module, "tpu_kernel_launch_atomic");
+    std::cout << func_id << std::endl;
+    auto lret = tpu_kernel_launch(bm_handle, func_id, &params, sizeof(params));
+    std::cout << "launch" << lret << std::endl;
+
+    tpu_kernel_unload_module(bm_handle, tpu_module);
+    bm_dev_free(bm_handle);
+}
+
 int main()
 {
-    device_example();
+    // device_example();
+    tpu_kernel_launch_example();
     std::cout << "hello world" << std::endl;
     return 0;
 }
