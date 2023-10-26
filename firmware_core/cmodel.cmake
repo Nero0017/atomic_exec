@@ -14,13 +14,13 @@ include_directories(include)
 
 link_directories(${CMAKE_BINARY_DIR})
 
-set(KERNEL_HEADER "${CMAKE_BINARY_DIR}/firmware_core/kernel_module_data.h")
-add_custom_command(
-	OUTPUT ${KERNEL_HEADER}
-	COMMAND echo "const unsigned int kernel_module_data[] = {0}\;" > ${KERNEL_HEADER}
-)
+# set(KERNEL_HEADER "${CMAKE_BINARY_DIR}/firmware_core/kernel_module_data.h")
+# add_custom_command(
+# 	OUTPUT ${KERNEL_HEADER}
+# 	COMMAND echo "const unsigned int kernel_module_data[] = {0}\;" > ${KERNEL_HEADER}
+# )
 # Add a custom target that depends on the custom command
-add_custom_target(kernel_module ALL DEPENDS ${KERNEL_HEADER})
+# add_custom_target(kernel_module ALL DEPENDS ${KERNEL_HEADER})
 
 
 # target_compile_definitions(firmware PRIVATE -DUSING_CMODEL)

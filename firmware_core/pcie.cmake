@@ -41,15 +41,15 @@ set_target_properties(${SHARED_LIBRARY_OUTPUT_FILE} PROPERTIES PREFIX "" SUFFIX 
 set(INPUT_FILE "${CMAKE_BINARY_DIR}/firmware_core/libbm1684x_kernel_module.so")
 
 # Set the path to the output file
-set(OUTPUT_FILE "${CMAKE_BINARY_DIR}/firmware_core/kernel_module_data.h")
-add_custom_command(
-    OUTPUT ${OUTPUT_FILE}
-    DEPENDS ${SHARED_LIBRARY_OUTPUT_FILE}
-    COMMAND echo "const unsigned int kernel_module_data[] = {" > ${OUTPUT_FILE}
-    COMMAND hexdump -v -e '1/4 \"0x%08x,\\n\"' ${INPUT_FILE} >> ${OUTPUT_FILE}
-    COMMAND echo "}\;" >> ${OUTPUT_FILE}
-)
+# set(OUTPUT_FILE "${CMAKE_BINARY_DIR}/firmware_core/kernel_module_data.h")
+# add_custom_command(
+#     OUTPUT ${OUTPUT_FILE}
+#     DEPENDS ${SHARED_LIBRARY_OUTPUT_FILE}
+#     COMMAND echo "const unsigned int kernel_module_data[] = {" > ${OUTPUT_FILE}
+#     COMMAND hexdump -v -e '1/4 \"0x%08x,\\n\"' ${INPUT_FILE} >> ${OUTPUT_FILE}
+#     COMMAND echo "}\;" >> ${OUTPUT_FILE}
+# )
 
 # Add a custom target that depends on the custom command
 #add_custom_target(dynamic_library ALL DEPENDS ${SHARED_LIBRARY_OUTPUT_FILE})
-add_custom_target(kernel_module DEPENDS ${OUTPUT_FILE})
+# add_custom_target(kernel_module DEPENDS ${OUTPUT_FILE})
