@@ -20,7 +20,7 @@ add_executable(atomic ./main.cpp)
 include_directories(${CMAKE_BINARY_DIR}/firmware_core)
 
 # bm1684x.a
-link_directories($ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x)
+link_directories($ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x/lib)
 
 
 add_definitions(-DDEBUG --std=c++11 -Wall)
@@ -30,7 +30,7 @@ include_directories($ENV{ATOMIC_EXEC_TOP}/include)
 if(USING_CMODEL)
   include_directories($ENV{LIBSOPHON_TOP}/bmlib/include)
   link_directories($ENV{LIBSOPHON_TOP}/build/bmlib)
-  add_definitions(-DUSING_CMODEL) 
+  add_definitions(-DUSING_CMODEL)
   target_link_libraries(atomic $ENV{LIBSOPHON_TOP}/build/bmlib/libbmlib.so)
 else()
   include_directories($ENV{LIBSOPHON_TOP}/include)
@@ -42,13 +42,14 @@ if(USING_CMODEL)
   add_custom_command(
     TARGET atomic  # Replace <your_target_name> with your actual target name
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/bm1684x/libbackend_1684x.so ${CMAKE_BINARY_DIR}/libcmodel.so
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/third_party/bm1684x/lib/libbackend_1684x.so ${CMAKE_BINARY_DIR}/libcmodel.so
   )
 endif()
 
 add_subdirectory(firmware_core)
 
 include_directories(firmware_core/include)
+include_directories(/workspace/nntoolchain/TPU1686/kernel/include/)
 
 
 

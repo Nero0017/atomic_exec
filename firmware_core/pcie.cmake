@@ -10,14 +10,8 @@ file(GLOB_RECURSE DEVICE_SRCS
 set(CMAKE_BUILD_TYPE "Debug")
 
 # Set the include directories for the shared library
-# include_directories(${PROJECT_SOURCE_DIR}/../common/include/)
-# include_directories(${PROJECT_SOURCE_DIR}/../third_party/include/)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${CMAKE_BINARY_DIR})
-
-# Set the library directories for the shared library
-link_directories(${PROJECT_SOURCE_DIR}/../third_party/$ENV{CHIP_ARCH})
-link_directories(${CMAKE_BINARY_DIR}/firmware_core/)
 
 # Set the output file for the shared library
 set(SHARED_LIBRARY_OUTPUT_FILE libbm1684x_kernel_module)
@@ -27,7 +21,7 @@ add_library(${SHARED_LIBRARY_OUTPUT_FILE} SHARED ${DEVICE_SRCS})
 
 
 target_link_directories(${SHARED_LIBRARY_OUTPUT_FILE} PRIVATE
-	$ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x
+	$ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x/lib
 )
 
 # Link the libraries for the shared library

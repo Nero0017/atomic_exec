@@ -41,7 +41,7 @@ set(FULL_BM1684X -Wl,--whole-archive libbackend_1684x.so -Wl,--no-whole-archive)
 
 
 target_link_directories(${SHARED_LIBRARY_OUTPUT_FILE} PRIVATE
-	$ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x
+	$ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x/lib
 )
 target_link_libraries(${SHARED_LIBRARY_OUTPUT_FILE} ${FULL_BM1684X})
 
