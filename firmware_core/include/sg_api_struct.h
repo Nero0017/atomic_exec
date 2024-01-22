@@ -25,8 +25,18 @@ typedef unsigned short u16;
 
 typedef struct {
   int length;
-  char data[8];
+  int command_type;
+  char data[128];
 } WITH_PLATFORM(sg_api_atomic_t);
+
+#define MAX_CMD_NUM 4
+
+typedef struct {
+  int cmd_num;
+  int command_type[MAX_CMD_NUM];
+  int command_length[MAX_CMD_NUM];
+  char data[128 * MAX_CMD_NUM];
+} WITH_PLATFORM(sg_api_atomics_t);
 
 typedef struct {
   u64 input_global_offset;

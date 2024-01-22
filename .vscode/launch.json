@@ -1,0 +1,152 @@
+{
+    //   tpuc-opt conv3d_bm1684x_f32_final.mlir --codegen="model_file=conv3d.bmodel" -o /dev/null
+    // 使用 IntelliSense 了解相关属性。
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    // --codegen="model_file=/workspace/model_gridsampler/conv3d.bmodel"
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) bmrt_test gridsampler.bmodel",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/workspace/nntoolchain/net_compiler/out/install_bmruntime/app/bmrt_test",
+            "args": [
+                "--bmodel",
+                "/workspace/model_gridsampler/upsample_2023-05-18_bug_workspace/upsample_int8/compilation.bmodel"
+            ],
+            "stopAtEntry": false,
+            "cwd": "/workspace/workspace/model_gridsampler",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(gdb) attach model_runner",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "/usr/bin/python",
+            "processId": "${command:pickProcess}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Python: model_runner (bert2.11.0 int8)",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspace/tpu-mlir/python/tools/model_runner.py",
+            "cwd": "/workspace/model_bert/workspace",
+            "args": "--input bert_base_squad_uncased-2.11.0_in_f32.npz --model bert_base_squad_uncased-2.11.0_bm1684x_int8_sym_tpu.mlir --output bert_base_squad_uncased-2.11.0_bm1684x_int8_sym_tpu_outputs.npz --dump_all_tensors",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
+            "name": "Python: model_runner (bert2.11.0 bf16)",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspace/tpu-mlir/python/tools/model_runner.py",
+            "cwd": "/workspace/model_bert/workspace",
+            "args": "--input bert_base_squad_uncased-2.11.0_in_f32.npz --model bert_base_squad_uncased-2.11.0_bm1684x_bf16_tpu.mlir --output bert_base_squad_uncased-2.11.0_bm1684x_bf16_tpu_outputs.npz --dump_all_tensors",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        // {
+        //     "name": "Python: model_runner (groupnorm)",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "program": "/workspace/tpu-mlir/python/tools/model_runner.py",
+        //     "cwd": "/workspace/model_gridsampler/",
+        //     "args": "--input groupnorm_in_f32.npz --model groupnorm.bmodel --output groupnorm_bm1684x_f32_model_outputs.npz",
+        //     "console": "integratedTerminal",
+        //     "justMyCode": true,
+        // },
+        {
+            "name": "Python: model_runner (addbug)",
+            "type": "python",
+            "request": "launch",
+            "program": "/workspace/tpu-mlir/python/tools/model_runner.py",
+            "cwd": "/workspace/model_gridsampler/add_workspace",
+            "args": "--input addbug_in_f32.npz --model addbug_f32.bmodel --output addbug_bm1684x_f32_model_outputs.npz",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+        },
+        {
+            "name": "(docker) tpuc-opt succeed",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/workspace/tpu-mlir/install/bin/tpuc-opt",
+            "args": [
+                "/workspace/model_gridsampler/conv3d_bm1684x_f32_final.mlir",
+                "--codegen=\"model_file=/workspace/model_gridsampler/conv3d.bmodel\"",
+            ],
+            "stopAtEntry": false,
+            "cwd": "/workspace/model_gridsampler",
+            // "cwd": "${cwd}",
+            "environment": [],
+            // PYTHON_PATH , LD_LIBRARY_PATH
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "(docker) tpuc-opt error",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/workspace/tpu-mlir/install/bin/tpuc-opt",
+            "args": [
+                "/workspace/model_gridsampler/gridsampler_bm1684x_f32_final.mlir",
+                "--codegen=\"model_file=/workspace/model_gridsampler/gridsampler.bmodel\"",
+            ],
+            "stopAtEntry": false,
+            "cwd": "/workspace/model_gridsampler",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "将反汇编风格设置为 Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+    ]
+}

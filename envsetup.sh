@@ -19,11 +19,11 @@ function build_bmlib_cmodel()
 
 function build_atomic_cmodel(){
     build_bmlib_cmodel
-    
+
     pushd $ATOMIC_EXEC_TOP
     rm -rf build
     mkdir -p build
-    
+
     pushd build
     export LD_LIBRARY_PATH=/workspace/atomic_exec/build:$LD_LIBRARY_PATH
     export LIBSOPHON_TOP=/workspace/libsophon
@@ -38,14 +38,14 @@ function build_atomic_pcie(){
     pushd $ATOMIC_EXEC_TOP
     rm -rf build
     mkdir -p build
-    
+
     pushd build
     export LIBSOPHON_TOP=/opt/sophon/libsophon-current
     export CROSS_TOOLCHAINS=/workspace/bm_prebuilt_toolchains
     export LD_LIBRARY_PATH=/usr/local/libsophon-current/lib
     cmake .. -DCMAKE_BUILD_TYPE=Debug -DUSING_CMODEL=OFF -DPCIE_MODE=ON -DSOC_MODE=OFF
-    
-    # make kernel_module
+
+    make kernel_module
     make -j
     popd
     popd
@@ -55,7 +55,7 @@ function build_atomic_pcie(){
 function build_firmware_cmodel(){
     mkdir -p $ATOMIC_EXEC_TOP/firmware_core/build
     export CHIP_ARCH=bm1684x
-    
+
     pushd $ATOMIC_EXEC_TOP/firmware_core/build
     cmake .. -DUSING_CMODEL=ON
     make -j
@@ -65,7 +65,7 @@ function build_firmware_cmodel(){
 function build_firmware_pcie(){
     mkdir -p $ATOMIC_EXEC_TOP/firmware_core/build
     export
-    
+
     pushd $ATOMIC_EXEC_TOP/firmware_core/build
     cmake .. -DUSING_CMODEL=OFF -DPCIE_MODE=ON
     make -j
@@ -96,7 +96,7 @@ function rebuild_firmware_top_bm1684x()
         return $err
     fi
     popd
-    
+
     pushd $FIRMWARE_TOP_OUTPUT
     make ARCH=arm64 CROSS_COMPILE=$TOOLCHAIN_PREFIX
     local err=$?

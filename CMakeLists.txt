@@ -14,6 +14,9 @@ if((NOT DEFINED ENV{SG1684X_TOP}) AND (NOT DEFINED ENV{NNTC_TOP}))
 endif()
 
 add_executable(atomic ./main.cpp)
+add_library(atomic_exec SHARED ./atomic_exec.cpp)
+
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 
 
 # libbm1684x_kernel_module.so
@@ -32,10 +35,12 @@ if(USING_CMODEL)
   link_directories($ENV{LIBSOPHON_TOP}/build/bmlib)
   add_definitions(-DUSING_CMODEL)
   target_link_libraries(atomic $ENV{LIBSOPHON_TOP}/build/bmlib/libbmlib.so)
+  target_link_libraries(atomic_exec $ENV{LIBSOPHON_TOP}/build/bmlib/libbmlib.so)
 else()
   include_directories($ENV{LIBSOPHON_TOP}/include)
   link_directories($ENV{LIBSOPHON_TOP}/lib)
   target_link_libraries(atomic $ENV{LIBSOPHON_TOP}/lib/libbmlib.so)
+  target_link_libraries(atomic_exec $ENV{LIBSOPHON_TOP}/lib/libbmlib.so)
 endif()
 
 if(USING_CMODEL)

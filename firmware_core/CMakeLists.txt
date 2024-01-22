@@ -6,6 +6,7 @@ message("make firmware")
 include_directories(
 	$ENV{ATOMIC_EXEC_TOP}/third_party/bm1684x/include
 )
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 
 set(BM1684X_FIRMWARE_BASE /workspace/nntoolchain/TPU1686/bm1684x/firmware_base)
 set(BM1684X_FIRMWARE_TOP /workspace/nntoolchain/TPU1686/bm1684x/firmware_top)

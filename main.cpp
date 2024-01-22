@@ -7,11 +7,14 @@
 void device_example() {
 
   bm_handle_t bm_handle;
-  auto ret = bm_dev_request(&bm_handle, 0);
+  bm_dev_request(&bm_handle, 0);
 
   bm_device_mem_t device_mem;
-  size_t data_size = 5;
-  char data[] = {0, 1, 2, 3, 4};
+  size_t data_size = 1024 * 1024;
+  char data[1024 * 1024] = {0};
+  for (int i = 0; i < 1024 * 1024; i++) {
+    data[i] = i;
+  }
 
   char *d_data = (char *)malloc(data_size);
 
@@ -22,12 +25,13 @@ void device_example() {
                                         data_size)});
   ASSERT_SUCCESS({bm_malloc_device_byte(bm_handle, &device_mem, data_size)});
 
-  for (int i = 0; i < data_size; i++) {
+  for (size_t i = 0; i < data_size; i++) {
     if (d_data[i] != data[i]) {
       std::cerr << "err cmp " << std::endl;
     }
   }
-  delete d_data;
+  std::cout << "all pass" << std::endl;
+  free(d_data);
   bm_free_device(bm_handle, device_mem);
   bm_dev_free(bm_handle);
 }
@@ -35,7 +39,7 @@ void device_example() {
 void tpu_kernel_launch_example() {
 
   bm_handle_t bm_handle;
-  auto ret = bm_dev_request(&bm_handle, 0);
+  bm_dev_request(&bm_handle, 0);
   tpu_kernel_module_t tpu_module;
   tpu_kernel_function_t func_id;
 
@@ -79,7 +83,7 @@ void tpu_kernel_launch_example() {
 void tpu_kernel_atomic_example() {
 
   bm_handle_t bm_handle;
-  auto ret = bm_dev_request(&bm_handle, 0);
+  bm_dev_request(&bm_handle, 0);
   tpu_kernel_module_t tpu_module;
   tpu_kernel_function_t func_id;
 
@@ -88,13 +92,7 @@ void tpu_kernel_atomic_example() {
       "/workspace/atomic_exec/build/firmware_core/libbm1684x_kernel_module.so");
 
   bm_device_mem_t data_mem, weight_mem, output_mem;
-  ASSERT_SUCCESS({bm_malloc_device_byte(bm_handle, &data_mem, 128)});
-
-  u64 ctx_size = 8196; //
-
-  // u64 addr;
-  // addr = ctx->bm_dev->bm_device_alloc_mem(pmem->size);
-  u64 global_offset = 84938752;
+  // ASSERT_SUCCESS({bm_malloc_device_byte(bm_handle, &data_mem, 128)});
 
   weight_mem = bm_mem_from_device(4294967296, 4 * sizeof(float));
   data_mem = bm_mem_from_device(4294971392, 16 * sizeof(float));
@@ -109,7 +107,7 @@ void tpu_kernel_atomic_example() {
 
   sg_api_atomic_t params = {0};
   func_id = tpu_kernel_get_function(bm_handle, tpu_module,
-                                    "tpu_kernel_launch_atomic_gdma");
+                                    "tpu_kernel_launch_atomic_example");
   auto lret = tpu_kernel_launch(bm_handle, func_id, &params, sizeof(params));
 
   ASSERT_SUCCESS({bm_memcpy_d2s(bm_handle, (void *)output_data, output_mem)});
