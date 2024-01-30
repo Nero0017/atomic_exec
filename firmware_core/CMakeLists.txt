@@ -21,6 +21,8 @@ include_directories(/workspace/nntoolchain/TPU1686/common/include/firmware)
 
 include_directories(/workspace/nntoolchain/TPU1686/a53lite_drv)
 
+include_directories(/workspace/nntoolchain/TPU1686/bm1684x/firmware_dyn)
+
 include_directories(/workspace/nntoolchain/TPU1686/kernel/include/)
 
 

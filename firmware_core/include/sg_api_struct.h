@@ -11,6 +11,7 @@ typedef unsigned long long u64;
 typedef unsigned int u32;
 typedef unsigned char u8;
 typedef unsigned short u16;
+typedef unsigned long long global_addr_t;
 #define NO_USE 0
 
 #define MAX_ATTR_NUM 16
@@ -50,5 +51,9 @@ typedef struct {
   int if_relu;
   float relu_upper_limit;
 } WITH_PLATFORM(tpu_kernel_api_const_binary_t);
+
+typedef struct {
+  global_addr_t global_addr;
+} WITH_PLATFORM(sg_api_mcu_cpy_t);
 
 #endif

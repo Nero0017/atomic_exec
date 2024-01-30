@@ -42,7 +42,7 @@ function build_atomic_pcie(){
     pushd build
     export LIBSOPHON_TOP=/opt/sophon/libsophon-current
     export CROSS_TOOLCHAINS=/workspace/bm_prebuilt_toolchains
-    export LD_LIBRARY_PATH=/usr/local/libsophon-current/lib
+    export LD_LIBRARY_PATH=/opt/sophon/libsophon-current/lib
     cmake .. -DCMAKE_BUILD_TYPE=Debug -DUSING_CMODEL=OFF -DPCIE_MODE=ON -DSOC_MODE=OFF
 
     make kernel_module
@@ -103,3 +103,10 @@ function rebuild_firmware_top_bm1684x()
     popd
     return $err
 }
+
+function cp_new_addition_kernel_file()
+{
+    pushd $ATOMIC_EXEC_TOP
+    cp build/firmware_core/libbm1684x_kernel_module.so /workspace/tpu-mlir/third_party/atomic_exec/libbm1684x_atomic_kernel.so   
+}
+

@@ -2,8 +2,11 @@
 #include "firmware_common.h"
 #include "nodechip_anyatomic.h"
 #include "sg_api_struct.h"
+#include <stdio.h>
+#include <sys/time.h>
 
-void tpu_kernel_launch_atomic(const void *args) {
+void tpu_kernel_launch_atomic(const void *args)
+{
   sg_api_atomic_t *param = (sg_api_atomic_t *)args;
   tpu_initialize();
 
@@ -14,9 +17,11 @@ void tpu_kernel_launch_atomic(const void *args) {
   CMD_ID_NODE *pid_node = &id_node;
   u64 high, low;
   u64 *p_cmd = (u64 *)param->data;
-  if (param->command_type == 0) {
+  if (param->command_type == 0)
+  {
     BEGIN_FAST_GEN_CMD(BD)
-    for (int i = 0; i < param->length / 16; i++) {
+    for (int i = 0; i < param->length / 16; i++)
+    {
       low = *p_cmd;
       p_cmd++;
       high = *p_cmd;
@@ -25,9 +30,12 @@ void tpu_kernel_launch_atomic(const void *args) {
       printf("WRITE_CMD_BD(%d, %llu, %llu)\n", i, high, low);
     }
     END_FAST_GEN_CMD(BD, pid_node)
-  } else {
+  }
+  else
+  {
     BEGIN_FAST_GEN_CMD(GDMA)
-    for (int i = 0; i < param->length / 16; i++) {
+    for (int i = 0; i < param->length / 16; i++)
+    {
       low = *p_cmd;
       p_cmd++;
       high = *p_cmd;
@@ -43,7 +51,64 @@ void tpu_kernel_launch_atomic(const void *args) {
 
 TPUKERNEL_FUNC_REGISTER(tpu_kernel_launch_atomic);
 
-void tpu_kernel_launch_atomics(const void *args) {
+void tpu_kernel_mcu_cpy_l2s(const void *args)
+{
+  sg_api_mcu_cpy_t *param = (sg_api_mcu_cpy_t *)args;
+
+  const unsigned char *local_data =
+      (const unsigned char *)tpu_local_mem_addr(0, 0);
+  const unsigned char *global_data =
+      (const unsigned char *)tpu_global_mem_addr(param->global_addr);
+  memcpy(global_data, local_data, 16 * 1024 * 1024);
+  tpu_flush_cache(param->global_addr, 16 * 1024 * 1024);
+}
+
+// void tpu_kernel_mcu_cpy_l2s(const void *args)
+// {
+//   // struct timeval start, mid, end;
+//   // gettimeofday(&start, NULL);
+//   // fw_log("mcu cpy start: %d.%d", start.tv_sec, start.tv_usec);
+
+//   sg_api_mcu_cpy_t *param = (sg_api_mcu_cpy_t *)args;
+
+//   const unsigned char *local_data =
+//       (const unsigned char *)tpu_local_mem_addr(0, 0);
+//   const unsigned char *global_data =
+//       (const unsigned char *)tpu_global_mem_addr(param->global_addr);
+//   memcpy(global_data, local_data, 16 * 1024 * 1024);
+//   // gettimeofday(&mid, NULL);
+//   tpu_flush_cache(param->global_addr, 16 * 1024 * 1024);
+//   // gettimeofday(&end, NULL);
+//   // fw_log("mcu cpy end: %d.%d", end.tv_sec, end.tv_usec);
+//   // fw_log("mcu cpy cost: %d.%d", end.tv_sec, end.tv_usec);
+//   // unsigned int *time_data =
+//   //     (const unsigned char *)tpu_global_mem_addr(param->global_addr + 16 * 1024 * 1024);
+//   // time_data[0] = start.tv_sec;
+//   // time_data[1] = start.tv_usec;
+//   // time_data[2] = mid.tv_sec;
+//   // time_data[3] = mid.tv_usec;
+//   // time_data[4] = end.tv_sec;
+//   // time_data[5] = end.tv_usec;
+//   // tpu_flush_cache(param->global_addr + 16 * 1024 * 1024, 4 * 6);
+// }
+TPUKERNEL_FUNC_REGISTER(tpu_kernel_mcu_cpy_l2s);
+
+void tpu_kernel_gdma_cpy_l2s(const void *args)
+{
+  tpu_initialize();
+
+  sg_api_mcu_cpy_t *param = (sg_api_mcu_cpy_t *)args;
+  const dim4 shape = {1, 64, 512, 128};
+  dim4 *shape_ptr = &shape;
+
+  tpu_gdma_cpy_L2S(param->global_addr, 0, shape_ptr, NULL, NULL, DT_UINT32);
+  tpu_poll();
+}
+
+TPUKERNEL_FUNC_REGISTER(tpu_kernel_gdma_cpy_l2s);
+
+void tpu_kernel_launch_atomics(const void *args)
+{
   sg_api_atomics_t *param = (sg_api_atomics_t *)args;
   tpu_initialize();
 
@@ -53,15 +118,18 @@ void tpu_kernel_launch_atomics(const void *args) {
 
   CMD_ID_NODE *pid_node = &id_node;
   size_t offset = 0;
-  for (int i = 0; i < param->cmd_num; i++) {
+  for (int i = 0; i < param->cmd_num; i++)
+  {
     size_t length = param->command_length[i];
     int command_type = param->command_type[i];
 
     u64 high, low;
     u64 *p_cmd = (u64 *)(param->data + offset);
-    if (command_type == 0) {
+    if (command_type == 0)
+    {
       BEGIN_FAST_GEN_CMD(BD)
-      for (int i = 0; i < length / 16; i++) {
+      for (int i = 0; i < length / 16; i++)
+      {
         low = *p_cmd;
         p_cmd++;
         high = *p_cmd;
@@ -70,9 +138,12 @@ void tpu_kernel_launch_atomics(const void *args) {
         WRITE_CMD_BD(i, high, low);
       }
       END_FAST_GEN_CMD(BD, pid_node)
-    } else {
+    }
+    else
+    {
       BEGIN_FAST_GEN_CMD(GDMA)
-      for (int i = 0; i < length / 16; i++) {
+      for (int i = 0; i < length / 16; i++)
+      {
         low = *p_cmd;
         p_cmd++;
         high = *p_cmd;
@@ -88,7 +159,8 @@ void tpu_kernel_launch_atomics(const void *args) {
 }
 TPUKERNEL_FUNC_REGISTER(tpu_kernel_launch_atomics);
 
-void tpu_kernel_launch_atomic_example(const void *args) {
+void tpu_kernel_launch_atomic_example(const void *args)
+{
   tpu_initialize();
 
   CMD_ID_NODE id_node;
