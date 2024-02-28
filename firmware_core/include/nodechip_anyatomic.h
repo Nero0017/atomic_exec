@@ -6,5 +6,6 @@
 void tpu_kernel_launch_atomic(const void *param);
 void tpu_kernel_mcu_cpy_l2s(const void *param);
 void tpu_kernel_gdma_cpy_l2s(const void *param);
+void tpu_kernel_launch_modified_pio(const void *param);
 
 #endif

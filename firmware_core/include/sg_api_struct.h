@@ -56,4 +56,19 @@ typedef struct {
   global_addr_t global_addr;
 } WITH_PLATFORM(sg_api_mcu_cpy_t);
 
+// typedef struct {
+//   int forward_num;
+//   u64 bmodel_addr;
+//   u64 cmd_offset;
+//   u64 cmd_type_offset;
+//   u64 allcmds_buf_size;
+// } WITH_PLATFORM(sg_api_launch_pio_t);
+
+typedef struct {
+  size_t tiu_buf_len;
+  size_t dma_buf_len;
+  int tiu_nums;
+  int dma_nums;
+} WITH_PLATFORM(sg_api_pio_buf);
+
 #endif
