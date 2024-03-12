@@ -71,4 +71,12 @@ typedef struct {
   int dma_nums;
 } WITH_PLATFORM(sg_api_pio_buf);
 
+typedef struct {
+  u64 tiu_addr;
+  u64 dma_addr;
+  size_t tiu_buf_len;
+  size_t dma_buf_len;
+  int tiu_nums;
+  int dma_nums;
+} WITH_PLATFORM(sg_api_pios_buf);
 #endif
